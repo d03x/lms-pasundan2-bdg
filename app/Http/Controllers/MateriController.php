@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Service\Contract\KelasServiceInterface;
+use App\Service\MateriService;
+use Illuminate\Http\Request;
+use App\Service\MateriServiceInterface;
+
+class MateriController extends Controller
+{
+    public function showMateri(
+        Request $request,
+        KelasServiceInterface $kelasService,
+        MateriServiceInterface $materiService
+    ) {
+        //current matpel
+        $current_matpel = $request->query('matpel_id');
+        //kelas
+        $kelas_id = $request->kelas['id'];
+        //get kelas by service
+        $matpel = $kelasService
+            ->get_matpels($kelas_id)
+            ->select([
+                'matpel_kode',
+                'nama_matpel',
+            ]);
+        //create first matpel id
+        if (empty($current_matpel)) {
+            return $kelasService->handleFirstMatpel();
+        }
+        $materi = $materiService
+            ->getMateri($kelas_id, $current_matpel)
+            ->select([
+                'materi_id',
+                'nomor_materi',
+                'title',
+                'nama_kelas',
+                'nama_matpel',
+                'nama_guru',
+            ]);
+        //response data
+        $dataResponse = [
+            'materials' => $materi,
+            'matpels' => $matpel,
+            'current_matpel' => $current_matpel,
+        ];
+
+        return inertia('siswa/materi', $dataResponse);
+    }
+    public function view(string $id_materi, MateriServiceInterface $materiService)
+    {
+        $materi  = $materiService->getDetailMateri($id_materi);
+        return inertia('siswa/view-materi', [
+            'materi' => $materi,
+        ]);
+    }
+}
