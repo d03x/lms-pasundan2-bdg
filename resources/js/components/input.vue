@@ -39,7 +39,7 @@ const updateValue = (e: Event) => {
         :placeholder="placeholder"
         :value="modelValue"
         @input="updateValue"
-        class="w-full rounded-lg border-none bg-[#EAEaea] px-3 text-sm py-2 text-gray-700 placeholder-gray-400 transition-all focus:ring-2 focus:ring-blue-900 focus:outline-none"
+        class="w-full rounded border-none ring-1 ring-neutral-200 px-3 text-sm py-2 text-gray-700 placeholder-gray-400 transition-all focus:ring-2 focus:ring-blue-900 focus:outline-none"
         :class="{ 'ring-2 ring-red-500': error }"
     />
 </template>

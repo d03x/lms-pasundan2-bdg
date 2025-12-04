@@ -14,11 +14,12 @@ class MateriService implements MateriServiceInterface
         $materials = Pengajaran::where('materials.matpel_kode', '=', $matpel_id)
             ->join('gurus', 'gurus.nip', '=', 'pengajarans.guru_nip')
             ->join('kelas', 'kelas.id', '=', 'pengajarans.kelas_id')
-            ->where('pengajarans.kelas_id','=',$kelas_id)
+            ->where('pengajarans.kelas_id', '=', $kelas_id)
             ->join('matpels', 'matpels.kode', '=', 'pengajarans.matpel_kode')
             ->join('users', 'users.id', '=', 'gurus.user_id')
             ->join('materials', 'materials.matpel_kode', 'pengajarans.matpel_kode')
             ->select(['pengajarans.*', 'materials.file_materi', 'materials.nomor_materi', 'kelas.nama  as nama_kelas', 'materials.id as materi_id', 'gurus.gelar_depan', 'gurus.gelar_belakang', 'materials.title', 'materials.kelas_ids', 'matpels.nama as nama_matpel', 'users.name as nama_guru'])
+            ->orderBy('materials.nomor_materi', 'desc')
             ->get();
 
         $data = $materials->filter(function ($materi) use ($kelas_id) {
@@ -29,6 +30,10 @@ class MateriService implements MateriServiceInterface
             return collect($kelas_ids)
                 ->map(fn($k) => trim(strtolower($k)))
                 ->contains(trim(strtolower($kelas_id)));
+        });
+        $id = request()->user()->id;
+        $data->map(function ($data) use ($id) {
+            return $data;
         });
         return $data;
     }

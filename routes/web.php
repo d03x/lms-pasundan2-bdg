@@ -22,5 +22,6 @@ Route::middleware('authenticated')->group(function () {
     Route::middleware('authenticated:guru')->group(function () {
         Route::get('/guru/materi/{kelas_kode?}', [GuruMateriController::class, 'materi'])->name('guru.materi');
         Route::get('/guru/materi/{kelas_kode?}/tambah-materi', [GuruMateriController::class, 'tambahMateri'])->name('guru.materi.tambah');
+        Route::post('/guru/materi/{kelas_kode?}/simpan-materi', [GuruMateriController::class, 'simpanMateri'])->name('guru.materi.tambah.simpan');
     });
 });

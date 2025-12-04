@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
 use App\Models\Materi;
-use App\Models\Matpel;
 use App\Models\Pengajaran;
 use App\Service\Contract\KelasServiceInterface;
-use App\Service\KelasServiceImpl;
+use App\Service\Contract\MatpelServiceInterface;
 use App\Service\MateriServiceInterface;
+use App\Service\MatpelService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+
+use function Symfony\Component\Clock\now;
 
 class GuruMateriController extends Controller
 {
@@ -22,28 +21,14 @@ class GuruMateriController extends Controller
         Request $request,
         KelasServiceInterface $kelasService,
         MateriServiceInterface $materiService,
+        MatpelServiceInterface $matpelService,
         string|null $kelas_kode = null
     ) {
         $nipGuru = $request->role_id;
         $id = $request->user()->id;
         if ($kelas_kode) {
             $kodeMatpel = $request->kode_matpel;
-            $matpel = Pengajaran::join(
-                'kelas',
-                'kelas.id',
-                '=',
-                'pengajarans.kelas_id'
-            )
-                ->join(
-                    'matpels',
-                    'matpels.kode',
-                    '=',
-                    'pengajarans.matpel_kode'
-                )
-                ->where('kelas.id', '=', $kelas_kode)->select([
-                    'matpels.kode as kode_matpel',
-                    'matpels.nama'
-                ])->where('pengajarans.guru_nip', $nipGuru)->get();
+            $matpel = $matpelService->getMatpelByKelasAndGuru($kelas_kode, $nipGuru);
             if (!empty($kodeMatpel)) {
                 $materi = Materi::where('materials.matpel_kode', $kodeMatpel)
                     ->where('materials.created_by_user_id', '=', $id)
@@ -70,13 +55,60 @@ class GuruMateriController extends Controller
                 'materials' => $materi ?? null,
             ]);
         }
-        //get kelas by guru
         $kelas = $kelasService->getKelasByGuru($nipGuru);
         return inertia('guru/pilih-kelas', [
             'kelas' => $kelas,
         ]);
     }
-    public function tambahMateri(){
-        return inertia('guru/tambah-materi');
+    public function tambahMateri(string $kelas_kode, Request $request, MatpelServiceInterface $matpelService, KelasServiceInterface $kelasService)
+    {
+        $nipGuru = $request->role_id;
+        $matpels = $matpelService->getMatpelByKelasAndGuru($kelas_kode, $nipGuru);
+        $kelas = $kelasService->getKelasByGuru($nipGuru);
+
+        return inertia('guru/tambah-materi', [
+            'matpels' => $matpels,
+            'kelas' => $kelas,
+            'kelas_kode' => $kelas_kode,
+        ]);
+    }
+    public function simpanMateri(Request $request, string $kelas_kode, MateriServiceInterface $materiService)
+    {
+        $id = $request->user()->id;
+
+        $data = $request->validate([
+            'title' => 'string|required',
+            'matpel' => "required",
+            'youtube_id' => "string|required",
+            'kelas_ids' => ['required'],
+            'description' => "string|required",
+            'file_materi' => ["nullable"]
+        ]);
+        $kelass = [];
+        if (is_array($request->kelas_ids)) {
+            $kelass = collect($request->kelas_ids)->pluck('id_kelas');
+        }
+
+        $matpel = $request->matpel['kode_matpel'];
+        $nomorMateriTerakhir = $materiService->getMateri($kelas_kode, $matpel)->max('nomor_materi');
+
+        Materi::create([
+            'title' => $data['title'],
+            'created_by_user_id' => $id,
+            'status' => "publish",
+            'publish_date' => now(),
+            'description' => $data['description'],
+            'file_materi' =>   $data['file_materi'],
+            'youtube_id' => $data['youtube_id'],
+            'kelas_ids' => $kelass,
+            'matpel_kode' => $matpel,
+            'nomor_materi' => $nomorMateriTerakhir + 1,
+        ]);
+
+
+
+        return redirect()->back()->withErrors([
+            'success' => "Materil berhasil di tambahkan"
+        ]);
     }
 }

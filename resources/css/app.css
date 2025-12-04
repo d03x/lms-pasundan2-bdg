@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-
+@plugin "@tailwindcss/typography";
 :root {
     --primary: #0B1479;
     --primary-foreground: #FFFFFF;
@@ -22,7 +22,7 @@ body {
 
 
 .vs__dropdown-toggle {
-    @apply border border-neutral-300 rounded-md px-3 py-2 shadow bg-white;
+    @apply border border-neutral-300 rounded-md px-3 py-2  bg-white;
 }
 .v-select{
     @apply bg-white text-sm;
@@ -35,8 +35,12 @@ body {
     @apply text-sm;
 }
 
+.vs__search::placeholder{
+    @apply text-xs font-semibold text-neutral-100;
+}
+
 .vs__dropdown-menu {
-    @apply border border-neutral-200 shadow-md bg-white rounded-md;
+    @apply border border-neutral-200  bg-white rounded-md;
 }
 
 .vs__open-indicator {

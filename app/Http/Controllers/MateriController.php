@@ -6,6 +6,8 @@ use App\Service\Contract\KelasServiceInterface;
 use App\Service\MateriService;
 use Illuminate\Http\Request;
 use App\Service\MateriServiceInterface;
+use Shetabit\Visitor\Facade\Visitor;
+use Shetabit\Visitor\Models\Visit;
 
 class MateriController extends Controller
 {
@@ -38,7 +40,7 @@ class MateriController extends Controller
                 'nama_kelas',
                 'nama_matpel',
                 'nama_guru',
-            ]);
+            ])->values();
         //response data
         $dataResponse = [
             'materials' => $materi,
@@ -48,11 +50,14 @@ class MateriController extends Controller
 
         return inertia('siswa/materi', $dataResponse);
     }
-    public function view(string $id_materi, MateriServiceInterface $materiService)
+    public function view(string $id_materi, MateriServiceInterface $materiService, Request $request)
     {
+       $isVisiting = Visit::where('visitor_id', $request->user()->id)->count() > 0;
         $materi  = $materiService->getDetailMateri($id_materi);
+        visitor()->visit($materi);
         return inertia('siswa/view-materi', [
             'materi' => $materi,
+            'visiting' =>$isVisiting,
         ]);
     }
 }

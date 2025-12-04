@@ -11,7 +11,7 @@ const page = usePage().props;
 
 <template>
     <div v-if="page.materi" class="bg-white px-3 pt-2 lg:px-8 lg:py-5">
-        <h1 class="text-lg font-semibold capitalize text-neutral-700 lg:text-xl">
+        <h1 class="text-lg font-semibold text-neutral-700 capitalize lg:text-xl">
             {{ page.materi.title }}
         </h1>
         <div class="mt-2 flex flex-col space-y-1 text-sm">
@@ -27,7 +27,7 @@ const page = usePage().props;
                     {{ page.materi.nama_matpel }}
                 </span>
             </div>
-              <div class="flex items-center text-xs text-neutral-600">
+            <div class="flex items-center text-xs text-neutral-600">
                 <FormkitDatetime />
                 <span class="ml-1 block">
                     {{ page.materi.created_at }}
@@ -37,39 +37,36 @@ const page = usePage().props;
         <hr class="my-3 text-neutral-300" />
         <div class="flex flex-col space-y-4">
             <div class="overflow-hidden rounded">
-                <VideoPlayer 
-                    :yt-id="page.materi.youtube_id"
-                    />
+                <VideoPlayer :yt-id="page.materi.youtube_id" />
             </div>
             <div>
-                <h2 class="text-sm font-semibold">Description:</h2>
-                <p class="text-sm tracking-normal leading-relaxed">
-                    {{ page.materi.description }}
-                </p>
+                <h2 class="text-sm text-blue-500 font-semibold">Description:</h2>
+                <p v-html="page.materi.description" class="text-sm prose max-w-none lg:prose-xs"/>
             </div>
-            
+
             <div class="overflow-x-auto pb-4">
-                <h2 class="text-sm font-semibold">Link Materi:</h2>
+                <h2 class="text-sm border-b border-neutral-300 pb-1 mb-2 font-semibold">Link Materi:</h2>
                 <ul class="space-y-2 text-xs text-blue-500 lg:space-y-0 lg:text-sm">
-                    <li v-for="i in JSON.parse(page.materi.file_materi)" class="flex flex-col lg:flex-row lg:items-center lg:gap-1">
-                        <span class="text-neutral-700">[Buku Otomotif 1]</span>
+                    <li v-for="(i,num) in page.materi.file_materi" class="flex flex-col lg:flex-row lg:items-center lg:gap-1">
+                        <span class="text-neutral-700">
+                            #{{ num+1 }}
+                        </span>
                         <a
                             class="transition-all hover:ring-1 lg:px-1 lg:hover:text-red-500"
                             href="https://drive.google.com/file/d/1jfTZCwMTQLWng72IsvMg21jvqViZSfod/view"
-                            >
-                             {{ i }}
-                            </a
                         >
+                            {{ i }}
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
-    <div v-else class="bg-white text-center p-5 min-h-[400px] flex items-center flex-col justify-center">
-        <NotFoundVector/>
-        <div class="text-sm  mt-3">
+    <div v-else class="flex min-h-[400px] flex-col items-center justify-center bg-white p-5 text-center">
+        <NotFoundVector />
+        <div class="mt-3 text-sm">
             <h1>Opps! Materi tidak ditemukan atau anda tidak ada aksess</h1>
-            <Link class="font-bold mt-3 block text-primary hover:text-red-400" :href="showMateri()">Kembali!</Link>
+            <Link class="mt-3 block font-bold text-primary hover:text-red-400" :href="showMateri()">Kembali!</Link>
         </div>
     </div>
 </template>

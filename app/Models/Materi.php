@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Shetabit\Visitor\Traits\Visitable;
 
 class Materi extends Model
 {
     /** @use HasFactory<\Database\Factories\MateriFactory> */
-    use HasUuids, HasFactory;
+    use HasUuids, HasFactory, Visitable;
     protected $table = 'materials';
 
     protected $fillable = [
@@ -19,6 +20,7 @@ class Materi extends Model
         'publish_date',
         'description',
         'file_materi',
+        'nomor_materi',
         'youtube_id',
         'kelas_ids',
         'matpel_kode',
@@ -31,10 +33,12 @@ class Materi extends Model
             'created_at' => "datetime:d-M-Y h:i"
         ];
     }
-    public function matpel(){
+    public function matpel()
+    {
         return $this->belongsTo(Matpel::class);
     }
-    public function kelas(){
-        return $this->belongsToMany(Kelas::class,'pengajarans','kelas_id');
+    public function kelas()
+    {
+        return $this->belongsToMany(Kelas::class, 'pengajarans', 'kelas_id');
     }
 }
