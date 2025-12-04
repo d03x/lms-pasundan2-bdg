@@ -9,6 +9,7 @@ import { useForm, usePage } from '@inertiajs/vue3';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { motion } from 'motion-v';
 import { ref, watch } from 'vue';
 
 import VueSelect from 'vue-select';
@@ -50,13 +51,31 @@ let counter = 1;
 
 function addFile() {
     counter++;
-    total_ref.value.push(counter);
-    data.file_materi.push(''); // tambah 1 item kosong
+    if (counter > 10) {
+        toast.warning('Hanya bisa menyimpan 10 link materi');
+    } else {
+        total_ref.value.push(counter);
+        data.file_materi.push(''); // tambah 1 item kosong
+    }
 }
 
 function removeFile(id: number, index: number) {
-    total_ref.value = total_ref.value.filter((v) => v !== id);
-    data.file_materi.splice(index, 1); // hapus sesuai index input
+    const el = document.getElementById(`file-${id}`) as any;
+    el.animate(
+        [
+            { opacity: 1, transform: 'translateY(0)' },
+            { opacity: 0, transform: 'translateY(10px)' },
+        ],
+        { duration: 250, easing: 'ease' },
+    ).onfinish = () => {
+        total_ref.value.splice(index, 1);
+        data.file_materi.splice(index, 1);
+        if(counter <= 1) {
+            toast.warning("Minimal harus ada 1 file materi");
+        }else{
+            counter--;
+        }
+    };
 }
 </script>
 
@@ -82,7 +101,15 @@ function removeFile(id: number, index: number) {
                             <label class="mb-4 text-sm font-semibold text-neutral-600">Link Materi</label>
 
                             <div class="flex flex-col space-y-2">
-                                <div v-for="(id, index) in total_ref" :key="id" class="flex items-center gap-3">
+                                <motion.div
+                                    :initial="{ opacity: 0, y: 10 }"
+                                    :animate="{ opacity: 1, y: 0 }"
+                                    :transition="{ duration: 0.25 }"
+                                    v-for="(id, index) in total_ref"
+                                    :key="id"
+                                    :id="`file-${id}`"
+                                    class="flex items-center gap-3"
+                                >
                                     <Input
                                         class="bg-white text-xs ring-1 ring-neutral-400"
                                         type="text"
@@ -99,7 +126,7 @@ function removeFile(id: number, index: number) {
                                             <IcBaselineMinus />
                                         </Button>
                                     </div>
-                                </div>
+                                </motion.div>
                             </div>
                         </div>
                     </div>
@@ -126,7 +153,6 @@ function removeFile(id: number, index: number) {
                                 :multiple="true"
                             />
                         </div>
-                       
                     </div>
                 </div>
                 <div>
