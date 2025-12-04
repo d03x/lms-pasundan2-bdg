@@ -100,6 +100,30 @@ class GuruMateriController extends Controller
             'active_kelas' => $kelasActive,
         ]);
     }
+    /**
+     * Menyimpan data materi pembelajaran baru
+     *
+     * Method ini menangani penyimpanan materi pembelajaran dengan validasi data input.
+     * Data yang disimpan akan dikaitkan dengan kelas dan user yang sedang login.
+     *
+     * @param Request $request Object request yang berisi data input dari form
+     * @param string $kelas_kode Kode kelas untuk mengidentifikasi kelas tujuan
+     * @param MateriServiceInterface $materiService Service untuk menangani logika penyimpanan materi
+     *
+     * @return \Illuminate\Http\RedirectResponse Redirect kembali ke halaman sebelumnya dengan pesan success atau error
+     *
+     * @throws \Illuminate\Validation\ValidationException Jika validasi data gagal
+     *
+     * Validasi Input:
+     * - title: string, wajib diisi
+     * - matpel: wajib diisi (mata pelajaran)
+     * - youtube_id: string, wajib diisi, harus URL valid
+     * - kelas_ids: array, wajib diisi
+     * - description: string, wajib diisi
+     * - file_materi: file, opsional
+     *
+     * @note Terdapat bug pada pesan error - kedua kondisi menampilkan pesan yang sama
+     */
     public function simpanMateri(
         Request $request,
         string $kelas_kode,
