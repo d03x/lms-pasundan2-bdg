@@ -70,9 +70,9 @@ function removeFile(id: number, index: number) {
     ).onfinish = () => {
         total_ref.value.splice(index, 1);
         data.file_materi.splice(index, 1);
-        if(counter <= 1) {
-            toast.warning("Minimal harus ada 1 file materi");
-        }else{
+        if (counter <= 1) {
+            toast.warning('Minimal harus ada 1 file materi');
+        } else {
             counter--;
         }
     };

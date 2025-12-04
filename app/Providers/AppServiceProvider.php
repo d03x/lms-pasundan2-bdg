@@ -8,7 +8,7 @@ use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
 use App\Service\KelasServiceImpl;
 use App\Service\MateriService;
-use App\Service\MateriServiceInterface;
+use App\Service\Contract\MateriServiceInterface;
 use App\Service\MatpelService;
 use Illuminate\Support\ServiceProvider;
 

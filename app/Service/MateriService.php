@@ -5,9 +5,8 @@ namespace App\Service;
 use App\Facades\Youtube;
 use App\Models\Materi;
 use App\Models\Pengajaran;
-use Illuminate\Http\Request;
+use App\Service\Contract\MateriServiceInterface;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class MateriService implements MateriServiceInterface
 {

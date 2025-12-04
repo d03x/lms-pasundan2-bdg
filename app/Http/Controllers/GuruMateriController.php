@@ -1,16 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Facades\Youtube;
-use App\Models\Kelas;
-use App\Models\Materi;
-use App\Models\Pengajaran;
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
 use App\Service\MateriService;
-use App\Service\MateriServiceInterface;
-use App\Service\MatpelService;
+use App\Service\Contract\MateriServiceInterface;
 use Illuminate\Http\Request;
 
 use function Symfony\Component\Clock\now;

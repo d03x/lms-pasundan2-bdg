@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\MateriService;
 use Illuminate\Http\Request;
-use App\Service\MateriServiceInterface;
+use App\Service\Contract\MateriServiceInterface;
 use Shetabit\Visitor\Facade\Visitor;
 use Shetabit\Visitor\Models\Visit;
 
