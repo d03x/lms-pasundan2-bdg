@@ -13,6 +13,7 @@ import { ref, watch } from 'vue';
 
 import VueSelect from 'vue-select';
 import { toast } from 'vue-sonner';
+const page = usePage();
 const data = useForm<{
     title?: string;
     youtube_id?: string;
@@ -24,11 +25,10 @@ const data = useForm<{
     title: '',
     youtube_id: '',
     description: '',
-    kelas_ids: [],
+    kelas_ids: page.props.active_kelas as string[],
     matpel: '',
     file_materi: [],
 });
-const page = usePage();
 async function simpan() {
     await data.submit(simpanMateri({ kelas_kode: page.props.kelas_kode as string }));
 }
@@ -126,7 +126,7 @@ function removeFile(id: number, index: number) {
                                 :multiple="true"
                             />
                         </div>
-                        <div >
+                        <div>
                             <label class="mb-1 block text-sm font-semibold text-neutral-600" for="">NOMOR MATERI</label>
                             <Input class="max-w-xs" v-model="data.youtube_id" type="number" placeholder="Nomor Materi" />
                         </div>

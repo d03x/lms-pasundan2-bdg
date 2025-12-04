@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class KelasServiceImpl implements KelasServiceInterface
 {
+    public function getActiveClass(string $kelas_kode)
+    {
+        $kelasActive = collect([]);
+        $kelasActive->push(Kelas::select([
+            'id as id_kelas',
+            'nama as nama_kelas'
+        ])->where('id', $kelas_kode)->first());
+        return $kelasActive;
+    }
     public function getKelasByGuru(string $nip)
     {
         return  Kelas::withCount('siswa')

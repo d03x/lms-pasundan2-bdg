@@ -63,6 +63,23 @@ class MateriService implements MateriServiceInterface
             ->first();
         return $materi;
     }
+    public function getMateriByGuruDanKelas(string $matpel_kode, string $guru_id, string $kelas_kode)
+    {
+        return Materi::where('materials.matpel_kode', $matpel_kode)
+            ->where('materials.created_by_user_id', '=', $guru_id)
+            ->get()
+            ->filter(function ($mater) use ($kelas_kode) {
+                $kelas = is_string($mater->kelas_ids) ? json_decode($mater->kelas_ids, true) : $mater->kelas_ids;
+                return collect($kelas)->contains($kelas_kode);
+            })
+            ->map(function ($value) {
+                $fileMateri = is_string($value->file_materi) ? json_decode($value->file_materi, true) : $value->file_materi;
+                return [
+                    ...$value->toArray(),
+                    'jumlahFileMateri' => count($fileMateri)
+                ];
+            })->values();
+    }
     public function simpanMateri(array $data, string $kelas_kode, string $guru_id)
     {
         $kelass = [];
