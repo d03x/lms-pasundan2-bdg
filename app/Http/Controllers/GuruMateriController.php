@@ -124,7 +124,6 @@ class GuruMateriController extends Controller
         MateriServiceInterface $materiService
     ) {
         $id = $request->user()->id;
-
         $data = $request->validate([
             'title' => 'string|required',
             'matpel' => "required",

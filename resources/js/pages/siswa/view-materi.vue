@@ -40,22 +40,19 @@ const page = usePage().props;
                 <VideoPlayer :yt-id="page.materi.youtube_id" />
             </div>
             <div>
-                <h2 class="text-sm text-blue-500 font-semibold">Description:</h2>
-                <p v-html="page.materi.description" class="text-sm prose max-w-none lg:prose-xs"/>
+                <h2 class="text-sm font-semibold text-blue-500">Description:</h2>
+                <p v-html="page.materi.description" class="lg:prose-xs prose max-w-none text-sm" />
             </div>
 
             <div class="overflow-x-auto pb-4">
-                <h2 class="text-sm border-b border-neutral-300 pb-1 mb-2 font-semibold">Link Materi:</h2>
+                <h2 class="mb-2 border-b border-neutral-300 pb-1 text-sm font-semibold">Link Materi:</h2>
                 <ul class="space-y-2 text-xs text-blue-500 lg:space-y-0 lg:text-sm">
-                    <li v-for="(i,num) in page.materi.file_materi" class="flex flex-col lg:flex-row lg:items-center lg:gap-1">
+                    <li v-for="(i, num) in page.materi.file_materi" class="flex flex-col lg:flex-row lg:items-center lg:gap-1">
                         <span class="text-neutral-700">
-                            #{{ num+1 }}
+                            {{ i.name || '#' + (num + 1) }}
                         </span>
-                        <a
-                            class="transition-all hover:ring-1 lg:px-1 lg:hover:text-red-500"
-                            :href="i"
-                        >
-                            {{ i }}
+                        <a class="transition-all hover:ring-1 lg:px-1 lg:hover:text-red-500" :href="i.links || i">
+                            {{ i.links || i }}
                         </a>
                     </li>
                 </ul>

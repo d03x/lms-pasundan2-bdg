@@ -2,6 +2,7 @@
 import { simpanMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
 import Button from '@/components/button.vue';
 import Input from '@/components/input.vue';
+import LinkMateriInputField from '@/features/link-materi-input-field/link-materi-input-field.vue';
 import IcBaselineMinus from '@/icons/IcBaselineMinus.vue';
 import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
 import PageTitle from '@/layouts/page-title.vue';
@@ -84,7 +85,7 @@ function removeFile(id: number, index: number) {
     <div class="container mx-auto">
         <div class="rounded bg-white p-5">
             <form @submit.prevent="simpan" class="flex flex-col space-y-3">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="flex flex-col gap-2">
                         <Input v-model="data.title" placeholder="Judul Materi" />
                         <Input v-model="data.youtube_id" placeholder="Youtube ID" />
@@ -97,38 +98,9 @@ function removeFile(id: number, index: number) {
                                 placeholder="Deaskripsi Materi"
                             />
                         </div>
-                        <div class="mt-11">
-                            <label class="mb-4 text-sm font-semibold text-neutral-600">Link Materi</label>
-
-                            <div class="flex flex-col space-y-2">
-                                <motion.div
-                                    :initial="{ opacity: 0, y: 10 }"
-                                    :animate="{ opacity: 1, y: 0 }"
-                                    :transition="{ duration: 0.25 }"
-                                    v-for="(id, index) in total_ref"
-                                    :key="id"
-                                    :id="`file-${id}`"
-                                    class="flex items-center gap-3"
-                                >
-                                    <Input
-                                        class="bg-white text-xs ring-1 ring-neutral-400"
-                                        type="text"
-                                        v-model="data.file_materi[index]"
-                                        placeholder="Masukkan link materi"
-                                    />
-
-                                    <div class="flex items-center gap-1">
-                                        <Button @click="addFile">
-                                            <MaterialSymbolsAddCircleOutline />
-                                        </Button>
-
-                                        <Button v-if="total_ref.length > 1" class="bg-red-500" @click="() => removeFile(id, index)">
-                                            <IcBaselineMinus />
-                                        </Button>
-                                    </div>
-                                </motion.div>
-                            </div>
-                        </div>
+                        <LinkMateriInputField v-model="data.file_materi"/>
+                        {{ data.file_materi }}
+                       
                     </div>
                     <div class="flex flex-col gap-2">
                         <div>
