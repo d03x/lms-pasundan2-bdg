@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
 use App\Service\MateriService;
 use App\Service\Contract\MateriServiceInterface;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use function Symfony\Component\Clock\now;
@@ -49,7 +51,13 @@ class GuruMateriController extends Controller
                     $kodeMatpel,
                     $userId,
                     $kelas_kode
-                );
+                )->map(function ($item) {
+                    return array_merge(
+                        $item,
+                        ['publish_date' => Carbon::parse($item['publish_date'])->format('d-M-y h:i:s')],
+                        ['is_published' => Carbon::parse($item['publish_date'])->lessThanOrEqualTo(now())]
+                    );
+                });
             }
             return inertia('guru/materi', [
                 'matpels' => $matpel,
@@ -130,6 +138,7 @@ class GuruMateriController extends Controller
             'youtube_id' => "string|required|url",
             'kelas_ids' => ['required'],
             'description' => "string|required",
+            'publish_date' => ['nullable'],
             'file_materi' => ["nullable"]
         ]);
 

@@ -6,6 +6,8 @@ use App\Facades\Youtube;
 use App\Models\Materi;
 use App\Models\Pengajaran;
 use App\Service\Contract\MateriServiceInterface;
+use Carbon\Carbon;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Collection;
 
 class MateriService implements MateriServiceInterface
@@ -19,7 +21,7 @@ class MateriService implements MateriServiceInterface
             ->join('matpels', 'matpels.kode', '=', 'pengajarans.matpel_kode')
             ->join('users', 'users.id', '=', 'gurus.user_id')
             ->join('materials', 'materials.matpel_kode', 'pengajarans.matpel_kode')
-            ->select(['pengajarans.*', 'materials.file_materi', 'materials.nomor_materi', 'kelas.nama  as nama_kelas', 'materials.id as materi_id', 'gurus.gelar_depan', 'gurus.gelar_belakang', 'materials.title', 'materials.kelas_ids', 'matpels.nama as nama_matpel', 'users.name as nama_guru'])
+            ->select(['pengajarans.*', 'materials.publish_date', 'materials.file_materi', 'materials.nomor_materi', 'kelas.nama  as nama_kelas', 'materials.id as materi_id', 'gurus.gelar_depan', 'gurus.gelar_belakang', 'materials.title', 'materials.kelas_ids', 'matpels.nama as nama_matpel', 'users.name as nama_guru'])
             ->orderBy('materials.nomor_materi', 'desc')
             ->get();
 
@@ -31,10 +33,8 @@ class MateriService implements MateriServiceInterface
             return collect($kelas_ids)
                 ->map(fn($k) => trim(strtolower($k)))
                 ->contains(trim(strtolower($kelas_id)));
-        });
-        $id = request()->user()->id;
-        $data->map(function ($data) use ($id) {
-            return $data;
+        })->filter(function ($item) {
+            return Carbon::parse($item->publish_date)->lessThanOrEqualTo(Carbon::now());
         });
         return $data;
     }
@@ -91,7 +91,7 @@ class MateriService implements MateriServiceInterface
             'title' => $data['title'],
             'created_by_user_id' => $guru_id,
             'status' => "publish",
-            'publish_date' => now(),
+            'publish_date' => SupportCarbon::parse($data['publish_date']) ?? now(),
             'description' => $data['description'],
             'file_materi' =>   $data['file_materi'],
             'youtube_id' => Youtube::parseVideoID($data['youtube_id']),

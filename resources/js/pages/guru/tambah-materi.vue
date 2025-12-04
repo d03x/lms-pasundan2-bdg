@@ -7,6 +7,7 @@ import LinkMateriInputField from '@/features/link-materi-input-field/link-materi
 import PageTitle from '@/layouts/page-title.vue';
 import { getYouTubeVideoId } from '@/lib/utils';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
@@ -22,8 +23,10 @@ const data = useForm<{
     kelas_ids?: any[];
     matpel?: any;
     file_materi: string[];
+    publish_date?:string,
 }>({
     title: '',
+    publish_date:'',
     youtube_id: '',
     description: '',
     kelas_ids: page.props.active_kelas as string[],
@@ -125,6 +128,10 @@ const getVideID = computed(() => {
                                 label="nama_kelas"
                                 :multiple="true"
                             />
+                        </div>
+                        <div>
+                            <label class="mb-4 text-sm font-semibold text-neutral-600" for="">Jadwal Publish</label>
+                            <VueDatePicker v-model="data.publish_date" />
                         </div>
                     </div>
                 </div>

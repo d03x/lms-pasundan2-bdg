@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { tambahMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
 import Modal from '@/components/modal.vue';
+import CarbonEventSchedule from '@/icons/CarbonEventSchedule.vue';
 import CiTriangleWarning from '@/icons/CiTriangleWarning.vue';
 import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
+import MaterialSymbolsCheckCircleUnreadOutline from '@/icons/MaterialSymbolsCheckCircleUnreadOutline.vue';
 import MaterialSymbolsEditDocument from '@/icons/MaterialSymbolsEditDocument.vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
@@ -19,8 +21,8 @@ const modalID = 'modalViewData';
 function openModalTambah() {
     vfm.open(modalID);
 }
-function close(){
-    vfm.close(modalID)
+function close() {
+    vfm.close(modalID);
 }
 </script>
 
@@ -30,9 +32,14 @@ function close(){
         doloribus vel aut cum saepe tenetur a magnam neque nemo?
     </Modal>
     <div class="mt-4 flex items-center space-x-3">
-        <Link :href="tambahMateri({
-            kelas_kode : $page.props.kelas_kode as string
-        })" class="flex cursor-pointer items-center space-x-1 rounded bg-orange-500 p-2 px-3 text-xs text-white shadow">
+        <Link
+            :href="
+                tambahMateri({
+                    kelas_kode: $page.props.kelas_kode as string,
+                })
+            "
+            class="flex cursor-pointer items-center space-x-1 rounded bg-orange-500 p-2 px-3 text-xs text-white shadow"
+        >
             <MaterialSymbolsAddCircleOutline />
             <span>Tambah Materi</span>
         </Link>
@@ -53,6 +60,7 @@ function close(){
             <tr>
                 <th>NO</th>
                 <th>Judul</th>
+                <th>Tanggal Publish / Publish</th>
                 <th>Total File Materi</th>
                 <th>Action</th>
             </tr>
@@ -67,6 +75,17 @@ function close(){
                     <p class="line-clamp-1">
                         {{ materi.title }}
                     </p>
+                </td>
+                <td class="flex items-center justify-between space-x-2">
+                    <p class="line-clamp-1">{{ materi.publish_date }}</p>
+                    <div>
+                        <span v-if="materi.is_published" class="flex text-[15px] items-center justify-center rounded-full text-green-700">
+                            <MaterialSymbolsCheckCircleUnreadOutline />
+                        </span>
+                        <span v-else class="flex text-[15px] items-center justify-center rounded-full">
+                            <CarbonEventSchedule />
+                        </span>
+                    </div>
                 </td>
                 <td>
                     <div class="text-center font-semibold text-red-500 underline">{{ materi.jumlahFileMateri }}</div>
