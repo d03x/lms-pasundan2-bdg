@@ -53,7 +53,7 @@ const page = usePage().props;
                         </span>
                         <a
                             class="transition-all hover:ring-1 lg:px-1 lg:hover:text-red-500"
-                            href="https://drive.google.com/file/d/1jfTZCwMTQLWng72IsvMg21jvqViZSfod/view"
+                            :href="i"
                         >
                             {{ i }}
                         </a>

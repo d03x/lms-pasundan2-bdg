@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Youtube;
 use App\Models\Materi;
 use App\Models\Pengajaran;
 use App\Service\Contract\KelasServiceInterface;
@@ -79,33 +80,13 @@ class GuruMateriController extends Controller
         $data = $request->validate([
             'title' => 'string|required',
             'matpel' => "required",
-            'youtube_id' => "string|required",
+            'youtube_id' => "string|required|url",
             'kelas_ids' => ['required'],
             'description' => "string|required",
             'file_materi' => ["nullable"]
         ]);
-        $kelass = [];
-        if (is_array($request->kelas_ids)) {
-            $kelass = collect($request->kelas_ids)->pluck('id_kelas');
-        }
-
-        $matpel = $request->matpel['kode_matpel'];
-        $nomorMateriTerakhir = $materiService->getMateri($kelas_kode, $matpel)->max('nomor_materi');
-
-        Materi::create([
-            'title' => $data['title'],
-            'created_by_user_id' => $id,
-            'status' => "publish",
-            'publish_date' => now(),
-            'description' => $data['description'],
-            'file_materi' =>   $data['file_materi'],
-            'youtube_id' => $data['youtube_id'],
-            'kelas_ids' => $kelass,
-            'matpel_kode' => $matpel,
-            'nomor_materi' => $nomorMateriTerakhir + 1,
-        ]);
-
-
+       
+        $materiService->simpanMateri($data, $kelas_kode,$id);
 
         return redirect()->back()->withErrors([
             'success' => "Materil berhasil di tambahkan"

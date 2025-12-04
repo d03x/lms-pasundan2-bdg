@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Facades\Youtube;
 use App\Models\Materi;
 use App\Models\Pengajaran;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -60,5 +62,26 @@ class MateriService implements MateriServiceInterface
             ])
             ->first();
         return $materi;
+    }
+    public function simpanMateri(array $data, string $kelas_kode, string $guru_id)
+    {
+        $kelass = [];
+        if (is_array($data['kelas_ids'])) {
+            $kelass = collect($data['kelas_ids'])->pluck('id_kelas');
+        }
+        $matpel = $data['matpel']['kode_matpel'];
+        $nomorMateriTerakhir = $this->getMateri($kelas_kode, $matpel)->max('nomor_materi');
+        return Materi::create([
+            'title' => $data['title'],
+            'created_by_user_id' => $guru_id,
+            'status' => "publish",
+            'publish_date' => now(),
+            'description' => $data['description'],
+            'file_materi' =>   $data['file_materi'],
+            'youtube_id' => Youtube::parseVideoID($data['youtube_id']),
+            'kelas_ids' => $kelass,
+            'matpel_kode' => $matpel,
+            'nomor_materi' => $nomorMateriTerakhir + 1,
+        ]);
     }
 }

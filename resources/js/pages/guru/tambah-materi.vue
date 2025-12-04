@@ -2,15 +2,14 @@
 import { simpanMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
 import Button from '@/components/button.vue';
 import Input from '@/components/input.vue';
-import TextArea from '@/components/text-area.vue';
 import IcBaselineMinus from '@/icons/IcBaselineMinus.vue';
 import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
 import PageTitle from '@/layouts/page-title.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import { ref, watch } from 'vue';
 
 import VueSelect from 'vue-select';
 import { toast } from 'vue-sonner';
@@ -20,7 +19,7 @@ const data = useForm<{
     description?: string;
     kelas_ids?: any[];
     matpel?: any;
-    file_materi:string[],
+    file_materi: string[];
 }>({
     title: '',
     youtube_id: '',
@@ -49,7 +48,6 @@ watch(
 const total_ref = ref<number[]>([1]);
 let counter = 1;
 
-
 function addFile() {
     counter++;
     total_ref.value.push(counter);
@@ -71,15 +69,26 @@ function removeFile(id: number, index: number) {
                     <div class="flex flex-col gap-2">
                         <Input v-model="data.title" placeholder="Judul Materi" />
                         <Input v-model="data.youtube_id" placeholder="Youtube ID" />
-                        <div class="min-h-[120px] max-h-[400px]">
-                            <QuillEditor content-type="html" toolbar="minimal" theme="snow" v-model:content="data.description" placeholder="Deaskripsi Materi" />
+                        <div class="max-h-[400px] min-h-[120px]">
+                            <QuillEditor
+                                content-type="html"
+                                toolbar="minimal"
+                                theme="snow"
+                                v-model:content="data.description"
+                                placeholder="Deaskripsi Materi"
+                            />
                         </div>
                         <div class="mt-11">
                             <label class="mb-4 text-sm font-semibold text-neutral-600">Link Materi</label>
 
                             <div class="flex flex-col space-y-2">
                                 <div v-for="(id, index) in total_ref" :key="id" class="flex items-center gap-3">
-                                    <Input class="bg-white ring-1 ring-neutral-400 text-xs" type="text" v-model="data.file_materi[index]" placeholder="Masukkan link materi" />
+                                    <Input
+                                        class="bg-white text-xs ring-1 ring-neutral-400"
+                                        type="text"
+                                        v-model="data.file_materi[index]"
+                                        placeholder="Masukkan link materi"
+                                    />
 
                                     <div class="flex items-center gap-1">
                                         <Button @click="addFile">
@@ -97,11 +106,29 @@ function removeFile(id: number, index: number) {
                     <div class="flex flex-col gap-2">
                         <div>
                             <label class="mb-4 text-sm font-semibold text-neutral-600" for="">Pilih Matpel</label>
-                            <VueSelect placeholder="Pilih Matpel" v-model="data.matpel" :options="$page.props.matpels" index="kode_matpel" label="nama" :multiple="false" />
+                            <VueSelect
+                                placeholder="Pilih Matpel"
+                                v-model="data.matpel"
+                                :options="$page.props.matpels"
+                                index="kode_matpel"
+                                label="nama"
+                                :multiple="false"
+                            />
                         </div>
                         <div>
                             <label class="mb-4 text-sm font-semibold text-neutral-600" for="">Pilih Kelas</label>
-                            <VueSelect placeholder="Pilih kelas" v-model="data.kelas_ids" :options="$page.props.kelas" index="id_kelas" label="nama_kelas" :multiple="true" />
+                            <VueSelect
+                                placeholder="Pilih kelas"
+                                v-model="data.kelas_ids"
+                                :options="$page.props.kelas"
+                                index="id_kelas"
+                                label="nama_kelas"
+                                :multiple="true"
+                            />
+                        </div>
+                        <div >
+                            <label class="mb-1 block text-sm font-semibold text-neutral-600" for="">NOMOR MATERI</label>
+                            <Input class="max-w-xs" v-model="data.youtube_id" type="number" placeholder="Nomor Materi" />
                         </div>
                     </div>
                 </div>
