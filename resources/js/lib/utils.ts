@@ -13,5 +13,10 @@ const define_layout = (layout: DefineComponent, name: string) => {
     layout.default.layout = Layout;
     return layout;
 };
-
+function getYouTubeVideoId(url: string): string | null {
+  const regExp = /^.*(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^#&?]{11}).*$/;
+  const match = url.match(regExp);
+  return (match && match[1].length === 11) ? match[1] : null;
+}
+export {getYouTubeVideoId};
 export default define_layout;

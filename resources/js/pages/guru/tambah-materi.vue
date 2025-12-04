@@ -2,13 +2,15 @@
 import { simpanMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
 import Button from '@/components/button.vue';
 import Input from '@/components/input.vue';
+import VideoPlayer from '@/components/video-player.vue';
 import LinkMateriInputField from '@/features/link-materi-input-field/link-materi-input-field.vue';
 import PageTitle from '@/layouts/page-title.vue';
+import { getYouTubeVideoId } from '@/lib/utils';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import VueSelect from 'vue-select';
 import { toast } from 'vue-sonner';
@@ -75,6 +77,9 @@ function removeFile(id: number, index: number) {
         }
     };
 }
+const getVideID = computed(() => {
+    return getYouTubeVideoId(data.youtube_id as string) as string;
+});
 </script>
 
 <template>
@@ -86,6 +91,7 @@ function removeFile(id: number, index: number) {
                     <div class="flex flex-col gap-2">
                         <Input v-model="data.title" placeholder="Judul Materi" />
                         <Input v-model="data.youtube_id" placeholder="Youtube ID" />
+                        <VideoPlayer v-if="getVideID" :yt-id="getVideID" />
                         <div class="max-h-[400px] min-h-[120px]">
                             <QuillEditor
                                 content-type="html"
