@@ -126,10 +126,7 @@ function removeFile(id: number, index: number) {
                                 :multiple="true"
                             />
                         </div>
-                        <div>
-                            <label class="mb-1 block text-sm font-semibold text-neutral-600" for="">NOMOR MATERI</label>
-                            <Input class="max-w-xs" v-model="data.youtube_id" type="number" placeholder="Nomor Materi" />
-                        </div>
+                       
                     </div>
                 </div>
                 <div>
