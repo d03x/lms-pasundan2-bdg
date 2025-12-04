@@ -3,14 +3,11 @@ import { simpanMateri } from '@/actions/App/Http/Controllers/GuruMateriControlle
 import Button from '@/components/button.vue';
 import Input from '@/components/input.vue';
 import LinkMateriInputField from '@/features/link-materi-input-field/link-materi-input-field.vue';
-import IcBaselineMinus from '@/icons/IcBaselineMinus.vue';
-import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
 import PageTitle from '@/layouts/page-title.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
 import { QuillEditor } from '@vueup/vue-quill';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { motion } from 'motion-v';
 import { ref, watch } from 'vue';
 
 import VueSelect from 'vue-select';
@@ -42,7 +39,7 @@ watch(
         } else if ((data.errors as any).success) {
             toast.success((data.errors as any).success);
             data.resetAndClearErrors();
-            data.reset();
+            data.reset('description', 'file_materi', 'kelas_ids', 'matpel', 'title', 'youtube_id');
         }
     },
 );
@@ -85,7 +82,7 @@ function removeFile(id: number, index: number) {
     <div class="container mx-auto">
         <div class="rounded bg-white p-5">
             <form @submit.prevent="simpan" class="flex flex-col space-y-3">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     <div class="flex flex-col gap-2">
                         <Input v-model="data.title" placeholder="Judul Materi" />
                         <Input v-model="data.youtube_id" placeholder="Youtube ID" />
@@ -98,9 +95,7 @@ function removeFile(id: number, index: number) {
                                 placeholder="Deaskripsi Materi"
                             />
                         </div>
-                        <LinkMateriInputField v-model="data.file_materi"/>
-                        {{ data.file_materi }}
-                       
+                        <LinkMateriInputField v-model="data.file_materi" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <div>

@@ -60,11 +60,10 @@
     );
     </script>
     <template>
-        {{ files }}
         <div class="mt-11">
             <label class="mb-4 text-sm font-semibold text-neutral-600">Link Materi</label>
 
-            <div class="flex flex-col space-y-2">
+            <div class="flex flex-col py-1  overflow-y-auto pl-1 max-h-[200px] gap-1">
                 <motion.div
                     :initial="{ opacity: 0, y: 10 }"
                     :animate="{ opacity: 1, y: 0 }"
