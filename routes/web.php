@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('login', LoginController::class)->name('login');
 Route::post('login', [LoginController::class, 'checkLogin'])->name('login.check');
-Route::get('logout',[LoginController::class,'logout'])->name('auth.logout');
+Route::get('logout', [LoginController::class, 'logout'])->name('auth.logout');
 
 //authenticated guarded
 Route::middleware('authenticated')->group(function () {
@@ -23,5 +23,7 @@ Route::middleware('authenticated')->group(function () {
         Route::get('/guru/materi/{kelas_kode?}', [GuruMateriController::class, 'materi'])->name('guru.materi');
         Route::get('/guru/materi/{kelas_kode?}/tambah-materi', [GuruMateriController::class, 'tambahMateri'])->name('guru.materi.tambah');
         Route::post('/guru/materi/{kelas_kode?}/simpan-materi', [GuruMateriController::class, 'simpanMateri'])->name('guru.materi.tambah.simpan');
+        Route::delete('guru/delete-materi/{materi_id}', [GuruMateriController::class, 'deleteMateri'])->name('guru.materi.delete');
+        Route::patch('guru/publish-materi', [GuruMateriController::class, 'publishMateri'])->name('guru.materi.publish');
     });
 });

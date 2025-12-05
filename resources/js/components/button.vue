@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import LoadingIndicator from '@/icons/LoadingIndicator.vue';
+import { cn } from '@/lib/utils';
 import { motion } from 'motion-v';
 import { computed } from 'vue';
 
@@ -23,6 +24,10 @@ const props = defineProps({
     variant: {
         type: String,
         default: 'primary', // primary | secondary | danger dll bisa kamu tambah
+    },
+    class : {
+      type : String,
+      default : ''
     },
 });
 
@@ -51,7 +56,7 @@ const classes = computed(() => {
         :whilePress="{ scale: 0.98 }"
         :type="type as any"
         :disabled="disabled || loading"
-        :class="classes"
+        :class="cn(classes,props.class)"
     >
         <div class="flex items-center space-x-1 font-normal" v-if="loading">
             <LoadingIndicator />

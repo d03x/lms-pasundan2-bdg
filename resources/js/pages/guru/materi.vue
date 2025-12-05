@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { tambahMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
+import { deleteMateri, publishMateri, tambahMateri } from '@/actions/App/Http/Controllers/GuruMateriController';
+import Button from '@/components/button.vue';
 import Modal from '@/components/modal.vue';
 import CarbonEventSchedule from '@/icons/CarbonEventSchedule.vue';
 import CiTriangleWarning from '@/icons/CiTriangleWarning.vue';
+import IcBaselineDelete from '@/icons/IcBaselineDelete.vue';
 import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
 import MaterialSymbolsCheckCircleUnreadOutline from '@/icons/MaterialSymbolsCheckCircleUnreadOutline.vue';
-import MaterialSymbolsEditDocument from '@/icons/MaterialSymbolsEditDocument.vue';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import { useVfm } from 'vue-final-modal';
+import { toast } from 'vue-sonner';
 const page = usePage();
 const matpelSelected = ref<string | null>((page.props.kode_matpel as string) ?? null);
 watch(matpelSelected, () => {
@@ -24,6 +26,33 @@ function openModalTambah() {
 function close() {
     vfm.close(modalID);
 }
+async function deleteMateriItem(id: string) {
+    if (confirm('Apakah anda yakin')) {
+        const del = await router.delete(
+            deleteMateri({
+                materi_id: id,
+            }).url,
+        );
+    }
+}
+async function publishMateriItem(id: string) {
+    if (confirm('Apakah anda yakin')) {
+        const del = await router.patch(publishMateri().url, {
+            id : id
+        });
+    }
+}
+watch(page, (e) => {
+    if (page.props.errors.success) {
+        toast.success(page.props.errors.success as string, {
+            position: 'top-right',
+        });
+    } else if (page.props.errors.gagal) {
+        toast.error(page.props.errors.success as string, {
+            position: 'top-right',
+        });
+    }
+});
 </script>
 
 <template>
@@ -79,18 +108,25 @@ function close() {
                 <td class="flex items-center justify-between space-x-2">
                     <p class="line-clamp-1">{{ materi.publish_date }}</p>
                     <div>
-                        <span v-if="materi.is_published" class="flex text-[15px] items-center justify-center rounded-full text-green-700">
+                        <span v-if="materi.is_published" class="flex items-center justify-center rounded-full text-[15px] text-green-700">
                             <MaterialSymbolsCheckCircleUnreadOutline />
                         </span>
-                        <span v-else class="flex text-[15px] items-center justify-center rounded-full">
+                        <span v-else class="flex items-center justify-center rounded-full text-[15px]">
                             <CarbonEventSchedule />
                         </span>
                     </div>
                 </td>
                 <td>
-                    <div class="text-center font-semibold text-red-500 underline">{{ materi.jumlahFileMateri }}</div>
+                    <div class="text-center font-semibold text-red-500  underline">{{ materi.jumlahFileMateri }}</div>
                 </td>
-                <td><MaterialSymbolsEditDocument color="red" /></td>
+                <td class="flex justify-center items-center space-x-2">
+                    <Button @click="() => deleteMateriItem(materi.id)" class="bg-red-500 p-1 hover:bg-red-700 rounded-full">
+                        <IcBaselineDelete />
+                    </Button>
+                    <Button v-if="!materi.is_published" @click="() => publishMateriItem(materi.id)" class="font-normal px-2 rounded-full py-1 text-xs">
+                        Publish
+                    </Button>
+                </td>
             </tr>
         </tbody>
     </table>

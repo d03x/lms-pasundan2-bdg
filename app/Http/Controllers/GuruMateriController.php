@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Materi;
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
 use App\Service\MateriService;
@@ -150,5 +151,38 @@ class GuruMateriController extends Controller
         return redirect()->back()->withErrors([
             'gagal' => "Materil berhasil di tambahkan"
         ]);
+    }
+    public function deleteMateri(
+        Request $request,
+        string $materi_id
+    ) {
+        $id = $request->user()->id;
+        $materi = Materi::find($materi_id);
+        if ($materi && $materi->created_by_user_id === $id && $materi->delete()) {
+            return redirect()->back()->withErrors([
+                'success' => "Materil berhasil di hapus"
+            ]);
+        }
+        return redirect()->back()->withErrors([
+            'gagal' => "Materil gagal di hapus"
+        ]);
+    }
+    public function publishMateri(Request $request)
+    {
+        $id = $request->id ?? null;
+        if (!$id) {
+            return redirect()->back()->withErrors([
+                'gagal' => "Materil gagal di Publish"
+            ]);
+        }
+        $materi = Materi::find($id);
+        if ($materi) {
+            $materi->update([
+                'publish_date' => now()
+            ]);
+            return redirect()->back()->withErrors([
+                'success' => "Materil berhasil di Publish"
+            ]);
+        }
     }
 }
