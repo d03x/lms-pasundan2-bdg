@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Shetabit\Visitor\Traits\Visitable;
 
 class Materi extends Model
 {
     /** @use HasFactory<\Database\Factories\MateriFactory> */
-    use HasUuids, HasFactory, Visitable;
+    use HasUuids, HasFactory;
     protected $table = 'materials';
 
     protected $fillable = [

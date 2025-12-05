@@ -4,11 +4,15 @@ namespace App\Service;
 
 use App\Facades\Youtube;
 use App\Models\Materi;
+use App\Models\Matpel;
 use App\Models\Pengajaran;
+use App\Models\Siswa;
+use App\Notifications\FcmNotification;
 use App\Service\Contract\MateriServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class MateriService implements MateriServiceInterface
 {
@@ -81,23 +85,39 @@ class MateriService implements MateriServiceInterface
     }
     public function simpanMateri(array $data, string $kelas_kode, string $guru_id)
     {
-        $kelass = [];
-        if (is_array($data['kelas_ids'])) {
-            $kelass = collect($data['kelas_ids'])->pluck('id_kelas');
+        try {
+            $kelass = [];
+            if (is_array($data['kelas_ids'])) {
+                $kelass = collect($data['kelas_ids'])->pluck('id_kelas');
+            }
+            $matpel = $data['matpel']['kode_matpel'];
+            $nomorMateriTerakhir = $this->getMateri($kelas_kode, $matpel)->max('nomor_materi');
+            $user = Siswa::with('user')->whereIn('kelas_id', $kelass)->get();
+
+            $save = Materi::create([
+                'title' => $data['title'],
+                'created_by_user_id' => $guru_id,
+                'status' => "publish",
+                'publish_date' => SupportCarbon::parse($data['publish_date']) ?? now(),
+                'description' => $data['description'],
+                'file_materi' =>   $data['file_materi'],
+                'youtube_id' => Youtube::parseVideoID($data['youtube_id']),
+                'kelas_ids' => $kelass,
+                'matpel_kode' => $matpel,
+                'nomor_materi' => $nomorMateriTerakhir + 1,
+            ]);
+            if ($save) {
+                $matpel = Matpel::find($matpel);
+                foreach ($user as $data) {
+                    $data->user->notify(new FcmNotification(
+                        "Materi Baru",
+                        "Ada Materi Baru Pada matpel " . $matpel->nama,
+                    ));
+                }
+            }
+            return $save;
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
         }
-        $matpel = $data['matpel']['kode_matpel'];
-        $nomorMateriTerakhir = $this->getMateri($kelas_kode, $matpel)->max('nomor_materi');
-        return Materi::create([
-            'title' => $data['title'],
-            'created_by_user_id' => $guru_id,
-            'status' => "publish",
-            'publish_date' => SupportCarbon::parse($data['publish_date']) ?? now(),
-            'description' => $data['description'],
-            'file_materi' =>   $data['file_materi'],
-            'youtube_id' => Youtube::parseVideoID($data['youtube_id']),
-            'kelas_ids' => $kelass,
-            'matpel_kode' => $matpel,
-            'nomor_materi' => $nomorMateriTerakhir + 1,
-        ]);
     }
 }

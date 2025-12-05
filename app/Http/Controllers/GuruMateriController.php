@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Materi;
+use App\Models\Siswa;
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
 use App\Service\MateriService;
@@ -140,7 +141,7 @@ class GuruMateriController extends Controller
             'publish_date' => ['nullable'],
             'file_materi' => ["nullable"]
         ]);
-
+        
         if ($materiService->simpanMateri($data, $kelas_kode, $id)) {
             return redirect()->back()->withErrors([
                 'success' => "Materil berhasil di tambahkan"
