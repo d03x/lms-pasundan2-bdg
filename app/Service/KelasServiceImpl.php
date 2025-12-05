@@ -29,7 +29,8 @@ class KelasServiceImpl implements KelasServiceInterface
                 'kelas.nama as nama_kelas',
                 'kelas.id as id_kelas',
                 DB::raw("(SELECT COUNT(*) FROM siswas WHERE siswas.kelas_id = pengajarans.kelas_id AND siswas.status='aktif') as jumlah_siswa")
-            ])->get();
+            ])->groupBy('kelas.id', 'kelas.nama')
+            ->get();
     }
     /**
      * Buat relasi mengunakan query builder manual
