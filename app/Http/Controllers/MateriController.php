@@ -49,10 +49,11 @@ class MateriController extends Controller
     }
     public function view(string $id_materi, MateriServiceInterface $materiService, Request $request)
     {
-       $isVisiting = true;
+        $materi  = $materiService->getDetailMateri($id_materi);
+        $isVisiting = true;
         return inertia('siswa/view-materi', [
             'materi' => $materi,
-            'visiting' =>$isVisiting,
+            'visiting' => $isVisiting,
         ]);
     }
 }

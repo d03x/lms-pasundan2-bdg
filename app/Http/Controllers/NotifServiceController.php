@@ -24,8 +24,8 @@ class NotifServiceController extends Controller
 
         foreach ($users as $user) {
             $user->notify(new FcmNotification(
-                "Hello madefaker",
-                "HEI TAYOU"
+                "Materi Baru",
+                "Ahmad Hidayat Memposting Materi Baru Pada matpel MATEMATIKA"
             ));
         }
     }

@@ -4,15 +4,46 @@ namespace App\Helpers;
 
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache; // Import Cache
+use Illuminate\Support\Facades\Storage;
 
 class FcmHelper
 {
-    public static function  sendFcm($token, $title, $body)
+    public static function sendFcm($token, $title, $body)
     {
-        $projectId = getenv("FIREBASE_PROJECT_ID_FCM");
-        $serviceAccount = json_decode(file_get_contents(storage_path(getenv("GCLOUD_AUTH_SERVICE_FILE"))), true);
+        $accessToken = Cache::remember('fcm_access_token', 3300, function () {
+            return self::getGoogleAccessToken();
+        });
+
+        $projectId = env("FIREBASE_PROJECT_ID_FCM");
+        $response = Http::withToken($accessToken)
+            ->post(
+                "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
+                [
+                    "message" => [
+                        "token" => $token,
+                        "notification" => [
+                            "title" => $title,
+                            "body"  => $body,
+                        ],
+                    ]
+                ]
+            );
+
+        return $response->json();
+    }
+
+    private static function getGoogleAccessToken()
+    {
+        $credentialsPath = storage_path(env("GCLOUD_AUTH_SERVICE_FILE"));
+        
+        if (!file_exists($credentialsPath)) {
+            throw new \Exception("File Service Account tidak ditemukan di: " . $credentialsPath);
+        }
+
+        $serviceAccount = json_decode(file_get_contents($credentialsPath), true);
+        
         $now = time();
-        // Buat JWT buat auth
         $payload = [
             'iss' => $serviceAccount['client_email'],
             'sub' => $serviceAccount['client_email'],
@@ -24,26 +55,11 @@ class FcmHelper
 
         $jwt = JWT::encode($payload, $serviceAccount['private_key'], 'RS256');
 
-        // Dapatkan access token
-        $response = HTTp::asForm()->post('https://oauth2.googleapis.com/token', [
+        $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
             'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
             'assertion' => $jwt,
         ]);
 
-        $accessToken = $response->json()['access_token'];
-        // Kirim pesan FCM
-        return Http::withToken($accessToken)
-            ->post(
-                "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
-                [
-                    "message" => [
-                        "token" => $token,
-                        "notification" => [
-                            "title" => $title,
-                            "body" => $body,
-                        ]
-                    ]
-                ]
-            )->json();
+        return $response->json()['access_token'];
     }
 }

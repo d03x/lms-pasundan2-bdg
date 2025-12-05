@@ -62,7 +62,9 @@ onMounted(async () => {
 // ======================================
 onMessage(messaging, (payload) => {
     console.log('Foreground message:', payload);
-    toast.success(payload.notification?.title + ' - ' + payload.notification?.body);
+    toast.success(payload.notification?.title + ' - ' + payload.notification?.body,{
+        position : "top-center"
+    });
 });
 </script>
 
