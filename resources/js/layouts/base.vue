@@ -36,13 +36,9 @@ async function requestPermission() {
     }
 }
 
-// ======================================
-// GET TOKEN
-// ======================================
 async function getFcmToken() {
     try {
         const registration = await navigator.serviceWorker.ready;
-
         const oldToken = localStorage.getItem('fcm_token');
         if (oldToken) {
             console.log('Token sudah ada, skip:', oldToken);
@@ -59,10 +55,8 @@ async function getFcmToken() {
             return;
         }
 
-        // SIMPAN TOKEN KE SERVER
         axios.post(saveFcmToken().url, { token });
 
-        // SIMPAN TOKEN KE LOCAL
         localStorage.setItem('fcm_token', token);
 
         console.log('FCM Token:', token);
