@@ -4,9 +4,11 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuruMateriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\NotifServiceController;
 use App\Http\Controllers\TugasSiswaController;
 use Illuminate\Support\Facades\Route;
-
+Route::post('/fcm-cloud/save-fcm-token', [NotifServiceController::class,'saveFcmToken'])->name('save-fcm-token');
+Route::get("/send-notification", [NotifServiceController::class,'testSend'])->name('send');
 Route::get('login', LoginController::class)->name('login');
 Route::post('login', [LoginController::class, 'checkLogin'])->name('login.check');
 Route::get('logout', [LoginController::class, 'logout'])->name('auth.logout');

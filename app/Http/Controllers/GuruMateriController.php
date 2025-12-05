@@ -10,8 +10,6 @@ use App\Service\Contract\MateriServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-use function Symfony\Component\Clock\now;
-
 class GuruMateriController extends Controller
 {
     /**

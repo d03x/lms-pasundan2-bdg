@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $appends = ['role', 'nama', 'kelas'];
     protected $fillable = [
         'name',
+        'fcm_token',
         'email',
         'password',
         'is_admin',
@@ -90,5 +91,9 @@ class User extends Authenticatable
             }
             return $this->name;
         });
+    }
+    public function routeNotificationForFcm()
+    {
+        return $this->fcm_token;
     }
 }

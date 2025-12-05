@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Service\Contract\KelasServiceInterface;
-use App\Service\MateriService;
 use Illuminate\Http\Request;
 use App\Service\Contract\MateriServiceInterface;
-use Shetabit\Visitor\Facade\Visitor;
-use Shetabit\Visitor\Models\Visit;
 
 class MateriController extends Controller
 {
@@ -52,9 +49,7 @@ class MateriController extends Controller
     }
     public function view(string $id_materi, MateriServiceInterface $materiService, Request $request)
     {
-       $isVisiting = Visit::where('visitor_id', $request->user()->id)->count() > 0;
-        $materi  = $materiService->getDetailMateri($id_materi);
-        visitor()->visit($materi);
+       $isVisiting = true;
         return inertia('siswa/view-materi', [
             'materi' => $materi,
             'visiting' =>$isVisiting,
