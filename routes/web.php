@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Guru\TugasController;
 use App\Http\Controllers\GuruMateriController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MateriController;
@@ -27,5 +28,8 @@ Route::middleware('authenticated')->group(function () {
         Route::post('/guru/materi/{kelas_kode?}/simpan-materi', [GuruMateriController::class, 'simpanMateri'])->name('guru.materi.tambah.simpan');
         Route::delete('guru/delete-materi/{materi_id}', [GuruMateriController::class, 'deleteMateri'])->name('guru.materi.delete');
         Route::patch('guru/publish-materi', [GuruMateriController::class, 'publishMateri'])->name('guru.materi.publish');
+
+
+        Route::get('guru/tugas', App\Http\Controllers\Guru\TugasController::class)->name('guru.tugas');
     });
 });
