@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Storage;
 
 class FcmHelper
 {
-    public static function sendFcm($token, $title, $body)
+    public static function sendFcm($token,  $title, $body)
     {
+        if (empty($to)) {
+            $to = config("app.url");
+        }
         $accessToken = Cache::remember('fcm_access_token', 3300, function () {
             return self::getGoogleAccessToken();
         });
-
         $projectId = env("FIREBASE_PROJECT_ID_FCM");
         $response = Http::withToken($accessToken)
             ->post(
@@ -25,7 +27,13 @@ class FcmHelper
                         "notification" => [
                             "title" => $title,
                             "body"  => $body,
+
                         ],
+                        // "webpush" => [
+                        //     "fcmOptions" => [
+                        //         "link" => "https://appkamu.com/halaman-tujuan"
+                        //     ]
+                        // ]
                     ]
                 ]
             );
@@ -36,13 +44,13 @@ class FcmHelper
     private static function getGoogleAccessToken()
     {
         $credentialsPath = storage_path(env("GCLOUD_AUTH_SERVICE_FILE"));
-        
+
         if (!file_exists($credentialsPath)) {
             throw new \Exception("File Service Account tidak ditemukan di: " . $credentialsPath);
         }
 
         $serviceAccount = json_decode(file_get_contents($credentialsPath), true);
-        
+
         $now = time();
         $payload = [
             'iss' => $serviceAccount['client_email'],

@@ -6,6 +6,7 @@ use App\Helpers\FcmHelper;
 use App\Models\User;
 use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 
 class NotifServiceController extends Controller

@@ -41,13 +41,31 @@ async function requestPermission() {
 // ======================================
 async function getFcmToken() {
     try {
-        const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        const registration = await navigator.serviceWorker.ready;
+
+        const oldToken = localStorage.getItem('fcm_token');
+        if (oldToken) {
+            console.log('Token sudah ada, skip:', oldToken);
+            return;
+        }
+
         const token = await getToken(messaging, {
             vapidKey: 'BJsJW68L2SBlEQ7OiZprKb8GDx0f9Pz86ad19HyV-uSUnyH30HaKN-pMPbsKrU55O458LXO8vxY1EiU8DhBBtPI',
-            serviceWorkerRegistration: swReg,
+            serviceWorkerRegistration: registration,
         });
+
+        if (!token) {
+            toast.error('Token kosong');
+            return;
+        }
+
+        // SIMPAN TOKEN KE SERVER
         axios.post(saveFcmToken().url, { token });
-        console.log(token);
+
+        // SIMPAN TOKEN KE LOCAL
+        localStorage.setItem('fcm_token', token);
+
+        console.log('FCM Token:', token);
     } catch (err) {
         console.error('FCM ERROR:', err);
         toast.error('Gagal mendapatkan FCM token');
@@ -55,16 +73,24 @@ async function getFcmToken() {
 }
 
 onMounted(async () => {
-    await requestPermission();
+    if ('serviceWorker' in navigator) {
+        // Pastikan hanya 1 SW yang aktif
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+            scope: '/',
+        });
+
+        console.log('SW ready:', registration);
+
+        await requestPermission();
+    }
 });
+
 // ======================================
 // LISTEN PESAN SAAT TAB AKTIF
 // ======================================
 onMessage(messaging, (payload) => {
     console.log('Foreground message:', payload);
-    toast.success(payload.notification?.title + ' - ' + payload.notification?.body,{
-        position : "top-center"
-    });
+    toast.success(payload.notification?.title + ' - ' + payload.notification?.body);
 });
 </script>
 
