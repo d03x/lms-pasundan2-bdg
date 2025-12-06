@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guru;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\Tugas;
 use App\Service\Contract\KelasServiceInterface;
 use App\Service\Contract\MatpelServiceInterface;
@@ -20,7 +21,9 @@ class TugasController extends Controller
             }
             return true;
         });
+        $info_kelas = Kelas::find($kelas_id);
         return inertia('guru/tugas', [
+            'info_kelas' => $info_kelas,
             'tugas' => $tug
         ]);
     }

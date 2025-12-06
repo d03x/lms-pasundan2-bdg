@@ -8,7 +8,7 @@
             </div>
         </div>
     </header>
-    <nav class="sticky top-0  z-50 bg-white/50 py-0.5 shadow backdrop-blur-md">
+    <nav class="sticky top-0  z-50   shadow bg-white">
         <AppMenu />
     </nav>
 </template>
