@@ -5,12 +5,13 @@ import MaterialSymbolsMenuBookOutlineRounded from '@/icons/MaterialSymbolsMenuBo
 import SolarSquareAcademicCap2Bold from '@/icons/SolarSquareAcademicCap2Bold.vue';
 import MenuItem from './menu-item.vue';
 import  { materi } from '@/actions/App/Http/Controllers/GuruMateriController';
+import { tugas } from '@/routes/guru';
 </script>
 
 <template>
     <MenuItem label="Manajemen Mapel" href="/" :has-dropdown="true" :icon="SolarSquareAcademicCap2Bold">
         <MenuItem label="Materi" :href="materi()" :icon="MaterialSymbolsMenuBookOutlineRounded" />
-        <MenuItem label="Tugas" href="/" :icon="HugeiconsTaskDaily01" />
+        <MenuItem label="Tugas" :href="tugas()" :icon="HugeiconsTaskDaily01" />
         <MenuItem label="Nilai" href="/" :icon="MaterialSymbolsMarkdownPaste" />
     </MenuItem>
 </template>
