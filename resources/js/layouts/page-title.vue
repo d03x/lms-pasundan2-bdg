@@ -1,5 +1,5 @@
 <template>
-    <div v-if="title || subtitle" class="py-2  p-3 mb-3 mt-2 rounded-md">
+    <div v-if="title || subtitle" class="py-2  mb-3 mt-2 rounded-md">
         <h1
             class="text-lg font-semibold text-neutral-700 leading-tight"
         >

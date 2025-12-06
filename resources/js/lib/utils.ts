@@ -1,5 +1,6 @@
 import Layout from '@/layouts/layout.vue';
 import { clsx, type ClassValue } from 'clsx';
+import dayjs from 'dayjs';
 import { twMerge } from 'tailwind-merge';
 import { DefineComponent } from 'vue';
 export function cn(...inputs: ClassValue[]) {
@@ -18,5 +19,9 @@ function getYouTubeVideoId(url: string): string | null {
   const match = url.match(regExp);
   return (match && match[1].length === 11) ? match[1] : null;
 }
-export {getYouTubeVideoId};
+const formatTanggal = (date: string) => {
+    return dayjs(date).format('DD MMM YYYY HH:mm');
+};
+export {getYouTubeVideoId,formatTanggal};
 export default define_layout;
+

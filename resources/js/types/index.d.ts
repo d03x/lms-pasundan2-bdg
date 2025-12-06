@@ -12,6 +12,7 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     auth: Auth;
     tugas : any[],
     info_kelas : any,
+    search_current_terms:any,
     matpels: Matpels[];
     materials : any[],
     materi : any,
