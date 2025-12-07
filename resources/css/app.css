@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
+
 :root {
     --primary: #0B1479;
     --primary-foreground: #FFFFFF;
@@ -21,107 +22,87 @@ body {
 
 
 
-.vs__dropdown-toggle {
-    @apply border border-neutral-300 rounded-md px-3 py-2  bg-white;
-}
-.v-select{
-    @apply bg-white text-sm;
-}
-.vs__selected {
-    @apply text-neutral-700;
-}
-
-.vs__search {
-    @apply text-sm;
+.cool-table-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    border-radius: 14px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    font-family: 'Poppins', sans-serif;
 }
 
-.vs__search::placeholder{
-    @apply text-xs font-semibold text-neutral-100;
+table.cool-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
 }
 
-.vs__dropdown-menu {
-    @apply border border-neutral-200  bg-white rounded-md;
+thead.cool-head th {
+    background: white;
+    padding: 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: .5px;
+    border-bottom: 2px solid #eaeaea;
 }
 
-.vs__open-indicator {
-    @apply text-neutral-500;
+/* Garis kecil warna orange dan biru di bawah header */
+thead.cool-head tr {
+    position: relative;
+}
+
+thead.cool-head tr::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #ff7f3f, #0072ff);
+}
+
+tbody.cool-body td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+tbody.cool-body tr:hover {
+    background-color: #fff7f0;
+    /* soft orange */
+    transition: 0.2s ease;
 }
 
 
-    .cool-table-wrapper {
-        max-width: 900px;
-        margin: 40px auto;
-        border-radius: 14px;
-        overflow: hidden;
-        background: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    table.cool-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-    }
-
-    thead.cool-head th {
-        background: white;
-        padding: 14px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 13px;
-        letter-spacing: .5px;
-        border-bottom: 2px solid #eaeaea;
-    }
-
-    /* Garis kecil warna orange dan biru di bawah header */
-    thead.cool-head tr {
-        position: relative;
-    }
-    thead.cool-head tr::after {
-        content: "";
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, #ff7f3f, #0072ff);
-    }
-
-    tbody.cool-body td {
-        padding: 12px 14px;
-        border-bottom: 1px solid #f1f1f1;
-    }
-
-    tbody.cool-body tr:hover {
-        background-color: #fff7f0; /* soft orange */
-        transition: 0.2s ease;
-    }
-
-
-    /* Overlay fade */
+/* Overlay fade */
 .vfm-fade-enter-active,
 .vfm-fade-leave-active {
-  transition: opacity 0.25s ease;
+    transition: opacity 0.25s ease;
 }
 
 .vfm-fade-enter-from,
 .vfm-fade-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 /* Slide down untuk konten */
 .vfm-slide-down-enter-active,
 .vfm-slide-down-leave-active {
-  transition: all 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: all 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .vfm-slide-down-enter-from {
-  opacity: 0;
-  transform: translateY(-15px) scale(0.98);
+    opacity: 0;
+    transform: translateY(-15px) scale(0.98);
 }
 
 .vfm-slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-10px) scale(0.98);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+}
+
+
+.v-select .vs__search::placeholder{
+    @apply text-base;
 }
