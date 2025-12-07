@@ -32,6 +32,11 @@ Route::middleware('authenticated')->group(function () {
 
 
         Route::get('guru/tugas', App\Http\Controllers\Guru\TugasController::class)->name('guru.tugas');
-        Route::get('guru/{kelas_id}/tugas', [App\Http\Controllers\Guru\TugasController::class,'index'])->name('guru.tugas.all_tugas');
+        Route::get('guru/{kelas_id}/tugas', [App\Http\Controllers\Guru\TugasController::class, 'index'])->name('guru.tugas.all_tugas');
+
+        Route::get('guru/tugas/tambah', [App\Http\Controllers\Guru\TugasController::class, 'tambah'])->name('guru.tugas.tambah');
+
+
+        Route::post('guru/get-kelas-by-matpel', [App\Http\Controllers\Guru\TugasController::class, 'getKelasByMatpel'])->name('guru.get-kelas-by-matpel');
     });
 });

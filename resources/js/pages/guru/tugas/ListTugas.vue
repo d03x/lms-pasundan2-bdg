@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TugasController from '@/actions/App/Http/Controllers/Guru/TugasController';
 import Button from '@/components/button.vue';
 import Input from '@/components/input.vue';
 import NotData from '@/components/NotData.vue';
@@ -6,7 +7,7 @@ import TugasItem from '@/components/TugasItem.vue';
 import MaterialSymbolsAddCircleOutline from '@/icons/MaterialSymbolsAddCircleOutline.vue';
 import PageTitle from '@/layouts/page-title.vue';
 import { all_tugas } from '@/routes/guru/tugas';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { router, useForm, usePage } from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 import VueSelect from 'vue-select';
 
@@ -41,6 +42,9 @@ async function onSearchButtonSubmit() {
         console.log(error);
     }
 }
+function onTambahButton(){
+    router.visit(TugasController.tambah().url)
+}
 </script>
 
 <template>
@@ -51,7 +55,7 @@ async function onSearchButtonSubmit() {
 
     <div class="mt-5 space-y-3">
         <div class="flex flex-col lg:flex-row lg:items-center">
-            <Button variant="danger" class="text-sm flex items-center space-x-1">
+            <Button @click="onTambahButton" variant="danger" class="text-sm flex items-center space-x-1">
                 <MaterialSymbolsAddCircleOutline/>
             </Button>
             <form @submit.prevent="onSearchButtonSubmit" class="flex min-w-xl items-center justify-center space-x-1 rounded  p-3">

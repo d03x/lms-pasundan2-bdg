@@ -27,4 +27,24 @@ class MatpelService implements MatpelServiceInterface
             ])->where('pengajarans.guru_nip', $nipGuru)->get();
         return $matpel;
     }
+
+    public function getMatpelByGuru(string $guruNip)
+    {
+        $matpel = Pengajaran::join(
+            'kelas',
+            'kelas.id',
+            '=',
+            'pengajarans.kelas_id'
+        )
+            ->join(
+                'matpels',
+                'matpels.kode',
+                '=',
+                'pengajarans.matpel_kode'
+            )->groupBy(['matpels.kode'])->select([
+                'matpels.kode as kode_matpel',
+                'matpels.nama'
+            ])->where('pengajarans.guru_nip', $guruNip)->get();
+        return $matpel;
+    }
 }
